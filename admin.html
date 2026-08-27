@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel | Jônatas Melo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/treino.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body class="treino-page">
+
+<header class="app-header">
+  <span class="app-header__title">Painel — <span class="text-red">Jônatas</span></span>
+  <button class="app-header__logout" onclick="sair()">Sair</button>
+</header>
+
+<main class="admin-layout">
+
+  <!-- Lista de alunos -->
+  <aside class="admin-sidebar">
+    <h2 class="admin-sidebar__title">Alunos</h2>
+    <p class="admin-hint">
+      Pra cadastrar um aluno novo: Supabase → Authentication → Add user,
+      depois rode o INSERT em profiles (veja sql/schema.sql).
+    </p>
+    <div id="listaAlunos" class="admin-student-list">Carregando...</div>
+  </aside>
+
+  <!-- Detalhe do aluno selecionado -->
+  <section class="admin-content" id="adminContent">
+    <p class="day-panel__placeholder">Selecione um aluno na lista ao lado.</p>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

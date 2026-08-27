@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jônatas Melo | Personal Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Navegação fixa -->
+<nav class="nav" id="nav">
+  <a href="#topo" class="nav__logo">JÔNATAS <span>MELO</span></a>
+  <div class="nav__links">
+    <a href="#trabalho">O trabalho</a>
+    <a href="#resultados">Resultados</a>
+    <a href="#planos">Planos</a>
+    <a href="treino.html">Treino</a>
+    <a href="login.html">Área do aluno</a>
+  </div>
+  <a href="#planos" class="nav__cta">Quero treinar</a>
+</nav>
+
+<!-- Indicador de progresso da rolagem -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ============ 1. PAINEL INICIAL / HERO ============ -->
+<section class="hero" id="topo">
+  <div class="hero__bg">
+    <!-- Substitua pela foto do Jônatas em alta resolução -->
+    <img src="assets/foto-hero.jpg" alt="Jônatas Melo, personal trainer" class="hero__photo">
+    <div class="hero__gradient"></div>
+  </div>
+
+  <div class="hero__slash" aria-hidden="true"></div>
+
+  <div class="hero__content">
+    <p class="eyebrow">Personal Trainer</p>
+    <h1 class="hero__title">
+      Seja bem-vindo<br>
+      à sua <span class="text-red">transformação</span>
+    </h1>
+    <p class="hero__subtitle">
+      Chega de treinar sem direção. Aqui, cada treino tem um motivo — o seu.
+    </p>
+    <a href="#trabalho" class="scroll-cue" aria-label="Rolar para saber mais">
+      <span>Descubra como</span>
+      <svg width="14" height="22" viewBox="0 0 14 22" fill="none"><path d="M7 1v18M1 13l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- ============ 2. O TRABALHO ============ -->
+<section class="section section--dark" id="trabalho">
+  <div class="section__inner">
+    <p class="eyebrow">O trabalho</p>
+    <h2 class="section__title">Treino não é sobre levantar peso.<br>É sobre levantar <span class="text-red">você</span>.</h2>
+
+    <div class="grid-2">
+      <div class="text-block">
+        <p>
+          Sou o Jônatas, e meu trabalho é simples de explicar e difícil de copiar:
+          entender onde você está, pra onde você quer ir, e construir o caminho
+          — treino, ajuste de rotina e acompanhamento próximo — pra você chegar lá
+          sem se perder no meio do caminho.
+        </p>
+        <p class="text-block__secondary">
+          <!-- Substitua pelo texto real sobre a metodologia/diferencial do Jônatas -->
+          Nada de planilha genérica. Cada treino é pensado pra sua rotina, seu corpo
+          e seu objetivo — com ajustes constantes conforme você evolui.
+        </p>
+      </div>
+      <div class="stats">
+        <div class="stats__item">
+          <span class="stats__number" data-count="150">0</span><span class="text-red">+</span>
+          <span class="stats__label">alunos treinados</span>
+        </div>
+        <div class="stats__item">
+          <span class="stats__number" data-count="6">0</span>
+          <span class="stats__label">anos de experiência</span>
+        </div>
+        <div class="stats__item">
+          <span class="stats__number" data-count="98">0</span><span class="text-red">%</span>
+          <span class="stats__label">de alunos satisfeitos</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="eyebrow eyebrow--spaced">Resultados</p>
+    <div class="photo-strip">
+      <!-- Galeria de resultados (fotos parciais) — substitua pelos arquivos reais -->
+      <div class="photo-strip__item"><img src="assets/resultado-1.jpg" alt="Resultado de aluno"></div>
+      <div class="photo-strip__item"><img src="assets/resultado-2.jpg" alt="Resultado de aluno"></div>
+      <div class="photo-strip__item"><img src="assets/resultado-3.jpg" alt="Resultado de aluno"></div>
+      <div class="photo-strip__item"><img src="assets/resultado-4.jpg" alt="Resultado de aluno"></div>
+    </div>
+    <a href="#resultados" class="link-arrow">Ver histórias completas →</a>
+  </div>
+</section>
+
+<!-- ============ 3. RESULTADOS DETALHADOS / FEEDBACKS ============ -->
+<section class="section section--black" id="resultados">
+  <div class="section__inner">
+    <p class="eyebrow">Resultados detalhados</p>
+    <h2 class="section__title">Quem treinou, <span class="text-red">confirma</span>.</h2>
+
+    <div class="cases">
+      <!-- Case 1 -->
+      <article class="case">
+        <div class="case__photo">
+          <img src="assets/caso-1.jpg" alt="Antes e depois do aluno">
+        </div>
+        <div class="case__info">
+          <span class="case__time">4 meses</span>
+          <p class="case__quote">
+            "Depoimento real do aluno sobre o processo e o resultado alcançado."
+          </p>
+          <span class="case__name">— Nome do aluno</span>
+        </div>
+      </article>
+
+      <!-- Case 2 -->
+      <article class="case case--reverse">
+        <div class="case__photo">
+          <img src="assets/caso-2.jpg" alt="Antes e depois do aluno">
+        </div>
+        <div class="case__info">
+          <span class="case__time">7 meses</span>
+          <p class="case__quote">
+            "Depoimento real do aluno sobre o processo e o resultado alcançado."
+          </p>
+          <span class="case__name">— Nome do aluno</span>
+        </div>
+      </article>
+
+      <!-- Case 3 -->
+      <article class="case">
+        <div class="case__photo">
+          <img src="assets/caso-3.jpg" alt="Antes e depois do aluno">
+        </div>
+        <div class="case__info">
+          <span class="case__time">3 meses</span>
+          <p class="case__quote">
+            "Depoimento real do aluno sobre o processo e o resultado alcançado."
+          </p>
+          <span class="case__name">— Nome do aluno</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. PLANOS / VALORES / CONTATO ============ -->
+<section class="section section--dark" id="planos">
+  <div class="section__inner">
+    <p class="eyebrow">Planos</p>
+    <h2 class="section__title">Escolha o ritmo que <span class="text-red">cabe</span> na sua rotina.</h2>
+
+    <div class="plans">
+      <div class="plan-card">
+        <span class="plan-card__days">2x</span>
+        <span class="plan-card__label">por semana</span>
+        <span class="plan-card__price">R$ XXX<small>/mês</small></span>
+        <a href="#contato" class="plan-card__cta">Quero esse plano</a>
+      </div>
+      <div class="plan-card plan-card--featured">
+        <span class="plan-card__tag">Mais escolhido</span>
+        <span class="plan-card__days">3x</span>
+        <span class="plan-card__label">por semana</span>
+        <span class="plan-card__price">R$ XXX<small>/mês</small></span>
+        <a href="#contato" class="plan-card__cta">Quero esse plano</a>
+      </div>
+      <div class="plan-card">
+        <span class="plan-card__days">5x</span>
+        <span class="plan-card__label">por semana</span>
+        <span class="plan-card__price">R$ XXX<small>/mês</small></span>
+        <a href="#contato" class="plan-card__cta">Quero esse plano</a>
+      </div>
+    </div>
+
+    <div class="consult" id="contato">
+      <div class="consult__text">
+        <p class="eyebrow">Consultoria online</p>
+        <h3 class="consult__title">Agende agora uma consultoria simplificada, que cabe na sua rotina.</h3>
+        <p class="consult__desc">
+          Treino personalizado, dentro das suas limitações, com total suporte —
+          direto pelo WhatsApp, sem enrolação.
+        </p>
+        <ul class="consult__list">
+          <li>Avaliação inicial do seu objetivo e rotina</li>
+          <li>Plano de treino sob medida</li>
+          <li>Acompanhamento e ajustes contínuos</li>
+        </ul>
+      </div>
+      <a
+        href="https://wa.me/5500000000000?text=Oi%20J%C3%B4natas!%20Quero%20agendar%20uma%20consultoria."
+        class="whatsapp-btn"
+        target="_blank" rel="noopener"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.71.45 3.38 1.3 4.85L2 22l5.36-1.4a9.9 9.9 0 004.68 1.19h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0012.04 2m0 1.67c2.2 0 4.27.86 5.83 2.42a8.2 8.2 0 012.42 5.82c0 4.55-3.7 8.24-8.26 8.24a8.2 8.2 0 01-4.19-1.15l-.3-.18-3.18.83.85-3.1-.2-.32a8.18 8.18 0 01-1.26-4.37c0-4.55 3.7-8.24 8.25-8.24M8.53 6.85c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.02s.87 2.34 1 2.5c.12.16 1.7 2.72 4.2 3.7 2.07.82 2.49.66 2.94.62.45-.04 1.45-.6 1.65-1.17.2-.58.2-1.08.14-1.18-.06-.1-.22-.16-.46-.28-.24-.12-1.45-.72-1.68-.8-.22-.08-.39-.12-.55.12-.16.24-.63.8-.78.97-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.35-1.67-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.36-.76-1.86-.2-.48-.4-.42-.55-.42h-.47Z"/></svg>
+        Falar com o Jônatas
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <span class="footer__logo">JÔNATAS <span class="text-red">MELO</span></span>
+    <div class="footer__links">
+      <a href="https://instagram.com/jonatasmelo.personal" target="_blank" rel="noopener">@jonatasmelo.personal</a>
+      <a href="treino.html">Área de treino</a>
+      <a href="#contato">Falar no WhatsApp</a>
+    </div>
+    <span class="footer__copy">© 2026 Jônatas Melo Personal Trainer</span>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>

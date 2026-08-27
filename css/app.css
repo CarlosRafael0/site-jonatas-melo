@@ -1,0 +1,190 @@
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 5vw;
+  background: var(--black);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.app-header__title {
+  font-family: var(--font-display);
+  font-size: 18px;
+}
+.app-header__logout {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--gray);
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.app-header__logout:hover { border-color: var(--red); color: var(--white); }
+
+/* ---------- Progresso (aluno) ---------- */
+.progress-section { margin-top: 64px; }
+
+.progress-form {
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.progress-form label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 4px;
+}
+.progress-form input {
+  width: 100%;
+  background: var(--black-3);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--white);
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.progress-form button {
+  align-self: end;
+  background: var(--red);
+  color: var(--white);
+  border: none;
+  padding: 11px 20px;
+  font-weight: 700;
+  font-size: 13px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .progress-form { grid-template-columns: 1fr; }
+}
+
+#progressoChart { margin-bottom: 24px; max-height: 260px; }
+
+.progress-list { display: flex; flex-direction: column; gap: 8px; }
+.progress-item {
+  display: grid;
+  grid-template-columns: 60px 70px 1fr;
+  gap: 12px;
+  font-size: 13px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.progress-item__date { color: var(--gray); }
+.progress-item__peso { color: var(--red); font-weight: 700; }
+.progress-item__obs { color: var(--white); }
+
+.exercise__no-video {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: var(--black-3);
+  color: var(--gray);
+  font-size: 12px;
+  border-radius: 6px;
+  aspect-ratio: 4/5;
+}
+
+/* ---------- Painel admin ---------- */
+.admin-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 5vw;
+  gap: 40px;
+}
+@media (max-width: 800px) {
+  .admin-layout { grid-template-columns: 1fr; }
+}
+
+.admin-sidebar__title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+.admin-hint {
+  font-size: 12px;
+  color: var(--gray);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.admin-student-list { display: flex; flex-direction: column; gap: 6px; }
+.admin-student-item {
+  text-align: left;
+  background: var(--black-3);
+  border: 1px solid transparent;
+  color: var(--white);
+  padding: 12px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.admin-student-item:hover { border-color: rgba(255,255,255,0.15); }
+.admin-student-item.is-active { border-color: var(--red); background: rgba(229,35,27,0.12); }
+
+.admin-exercise-form {
+  display: grid;
+  grid-template-columns: 120px 1fr 90px 1fr 1fr auto;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.admin-exercise-form select,
+.admin-exercise-form input {
+  background: var(--black-3);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--white);
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.admin-exercise-form button {
+  background: var(--red);
+  color: var(--white);
+  border: none;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+@media (max-width: 900px) {
+  .admin-exercise-form { grid-template-columns: 1fr 1fr; }
+}
+
+.admin-day-group { margin-bottom: 20px; }
+.admin-day-group h4 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--red);
+  margin-bottom: 8px;
+}
+.admin-exercise-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 14px;
+}
+.admin-remove {
+  background: transparent;
+  border: none;
+  color: var(--gray);
+  font-size: 12px;
+  cursor: pointer;
+}
+.admin-remove:hover { color: var(--red); }
