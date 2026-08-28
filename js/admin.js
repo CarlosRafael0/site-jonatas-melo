@@ -19,6 +19,38 @@ async function init() {
   await carregarAlunos();
 }
 
+/**
+ * Exibe notificações toast no canto da tela
+ */
+function mostrarToast(mensagem, tipo = 'sucesso') {
+  const toast = document.getElementById('toastNotification');
+  if (!toast) return;
+
+  toast.textContent = mensagem;
+  toast.className = `toast-notification is-visible ${tipo}`;
+
+  setTimeout(() => {
+    toast.classList.remove('is-visible');
+  }, 3000);
+}
+
+/**
+ * Filtra a lista de alunos em tempo real sem refazer requisição ao banco
+ */
+function filtrarAlunos(termo) {
+  const busca = termo.toLowerCase().trim();
+  const elementos = document.querySelectorAll('.admin-student-item');
+
+  elementos.forEach(el => {
+    const nome = el.textContent.toLowerCase();
+    if (nome.includes(busca)) {
+      el.style.display = 'block';
+    } else {
+      el.style.display = 'none';
+    }
+  });
+}
+
 async function carregarAlunos() {
   const { data, error } = await supabaseClient
     .from('profiles')
@@ -40,13 +72,20 @@ async function carregarAlunos() {
   lista.querySelectorAll('.admin-student-item').forEach(btn => {
     btn.addEventListener('click', () => selecionarAluno(btn.dataset.id, btn.textContent));
   });
+
+  // Aplica o filtro atual caso o usuário já tenha digitado algo na busca
+  const buscaInput = document.getElementById('buscaAluno');
+  if (buscaInput && buscaInput.value) {
+    filtrarAlunos(buscaInput.value);
+  }
 }
 
 async function selecionarAluno(alunoId, nome) {
   alunoSelecionadoId = alunoId;
 
   document.querySelectorAll('.admin-student-item').forEach(b => b.classList.remove('is-active'));
-  document.querySelector(`.admin-student-item[data-id="${alunoId}"]`).classList.add('is-active');
+  const btnAtivo = document.querySelector(`.admin-student-item[data-id="${alunoId}"]`);
+  if (btnAtivo) btnAtivo.classList.add('is-active');
 
   const content = document.getElementById('adminContent');
   content.innerHTML = `
@@ -126,13 +165,21 @@ async function adicionarExercicio(e) {
 
   if (!error) {
     document.getElementById('novoExercicioForm').reset();
+    mostrarToast('Exercício adicionado com sucesso!');
     await carregarExerciciosDoAluno();
+  } else {
+    mostrarToast('Erro ao adicionar exercício.', 'erro');
   }
 }
 
 async function removerExercicio(id) {
   const { error } = await supabaseClient.from('treinos').delete().eq('id', id);
-  if (!error) await carregarExerciciosDoAluno();
+  if (!error) {
+    mostrarToast('Exercício removido!', 'erro');
+    await carregarExerciciosDoAluno();
+  } else {
+    mostrarToast('Erro ao remover exercício.', 'erro');
+  }
 }
 
 async function carregarProgressoDoAluno() {
