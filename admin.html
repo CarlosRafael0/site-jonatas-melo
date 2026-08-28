@@ -27,6 +27,17 @@
       Pra cadastrar um aluno novo: Supabase → Authentication → Add user,
       depois rode o INSERT em profiles (veja sql/schema.sql).
     </p>
+
+    <!-- Campo de Busca de Alunos -->
+    <div class="admin-search-box">
+      <input 
+        type="text" 
+        id="buscaAluno" 
+        placeholder="Buscar aluno por nome..." 
+        oninput="filtrarAlunos(this.value)"
+      >
+    </div>
+
     <div id="listaAlunos" class="admin-student-list">Carregando...</div>
   </aside>
 
@@ -36,6 +47,9 @@
   </section>
 
 </main>
+
+<!-- Notificação Toast -->
+<div id="toastNotification" class="toast-notification"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
