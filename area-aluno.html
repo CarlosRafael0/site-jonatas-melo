@@ -64,6 +64,16 @@
   <span>Dúvidas? Fale comigo</span>
 </a>
 
+<!-- ===== Cronômetro de Descanso Flutuante ===== -->
+<div class="rest-timer" id="restTimer">
+  <span class="rest-timer__label">Descanso:</span>
+  <span class="rest-timer__time" id="timerDisplay">00:00</span>
+  <button onclick="iniciarTimer(45)">45s</button>
+  <button onclick="iniciarTimer(60)">60s</button>
+  <button onclick="iniciarTimer(90)">90s</button>
+  <button onclick="pararTimer()" class="btn-stop">✕</button>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script src="js/supabase-config.js"></script>
