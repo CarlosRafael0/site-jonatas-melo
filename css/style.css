@@ -3,13 +3,13 @@
    Paleta baseada na logo: preto / vermelho / branco
    ============================================ */
 :root {
-  --black:      #0A0A0B;
-  --black-2:    #131315;
-  --black-3:    #1C1C1F;
-  --red:        #E5231B;
-  --red-dark:   #8F150F;
-  --white:      #F5F4F0;
-  --gray:       #9A9A9E;
+  --black:       #0A0A0B;
+  --black-2:     #131315;
+  --black-3:     #1C1C1F;
+  --red:         #E5231B;
+  --red-dark:    #8F150F;
+  --white:       #F5F4F0;
+  --gray:        #9A9A9E;
 
   --font-display: 'Anton', sans-serif;
   --font-body: 'Inter', sans-serif;
@@ -94,6 +94,20 @@ ul { list-style: none; }
   transition: background .2s, color .2s;
 }
 .nav__cta:hover { background: var(--red); }
+
+/* Estilos das ações do menu e botão Entrar */
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.nav__login {
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.85;
+  transition: opacity .2s, color .2s;
+}
+.nav__login:hover { opacity: 1; color: var(--red); }
 
 @media (max-width: 760px) {
   .nav__links { display: none; }
