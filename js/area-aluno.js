@@ -3,6 +3,10 @@ let alunoAtual = null;
 let treinosPorDia = {};
 let chart = null;
 
+// Lógica do Cronômetro de Descanso
+let tempoRestante = 0;
+let timerInterval = null;
+
 const DIAS_LABEL = { seg: 'Segunda', ter: 'Terça', qua: 'Quarta', qui: 'Quinta', sex: 'Sexta', sab: 'Sábado', dom: 'Domingo' };
 
 async function init() {
@@ -25,6 +29,28 @@ async function init() {
   });
 
   document.getElementById('progressoForm').addEventListener('submit', registrarProgresso);
+}
+
+/**
+ * Converte links do YouTube / YouTube Shorts em URL de Embed para iframe
+ */
+function obterUrlEmbed(url) {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) 
+    ? `https://www.youtube.com/embed/${match[2]}` 
+    : url;
+}
+
+/**
+ * Alterna a classe de concluído ao clicar no checkbox do exercício
+ */
+function toggleExercicioConcluido(input) {
+  const card = input.closest('.exercise');
+  if (card) {
+    card.classList.toggle('is-completed', input.checked);
+  }
 }
 
 async function carregarTreino() {
@@ -57,21 +83,70 @@ function mostrarDia(dia) {
 
   container.innerHTML = `
     <h2 class="day-panel__title">${DIAS_LABEL[dia]}</h2>
-    ${exercicios.map(ex => `
-      <article class="exercise">
-        <div class="exercise__video">
-          ${ex.video_url
-            ? `<video controls src="${ex.video_url}"></video>`
-            : `<div class="exercise__no-video">Sem vídeo</div>`}
-        </div>
-        <div class="exercise__info">
-          <h3>${ex.exercicio}</h3>
-          <span class="exercise__sets">${ex.series_reps}</span>
+    ${exercicios.map(ex => {
+      const urlEmbed = obterUrlEmbed(ex.video_url);
+      return `
+        <article class="exercise">
+          <div class="exercise__header">
+            <label class="exercise__check">
+              <input type="checkbox" onchange="toggleExercicioConcluido(this)">
+            </label>
+            <div class="exercise__info">
+              <h3>${ex.exercicio}</h3>
+              <span class="exercise__sets">${ex.series_reps}</span>
+            </div>
+          </div>
+
           ${ex.observacao ? `<p class="exercise__note">${ex.observacao}</p>` : ''}
-        </div>
-      </article>
-    `).join('')}
+
+          ${urlEmbed ? `
+            <div class="video-container">
+              <iframe 
+                src="${urlEmbed}" 
+                title="${ex.exercicio}"
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+              </iframe>
+            </div>
+          ` : ''}
+        </article>
+      `;
+    }).join('')}
   `;
+}
+
+/* ============================================
+   FUNÇÕES DO CRONÔMETRO DE DESCANSO
+   ============================================ */
+function iniciarTimer(segundos) {
+  clearInterval(timerInterval);
+  tempoRestante = segundos;
+  atualizarDisplayTimer();
+
+  timerInterval = setInterval(() => {
+    tempoRestante--;
+    atualizarDisplayTimer();
+
+    if (tempoRestante <= 0) {
+      clearInterval(timerInterval);
+      if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
+      alert('Tempo de descanso finalizado!');
+    }
+  }, 1000);
+}
+
+function pararTimer() {
+  clearInterval(timerInterval);
+  tempoRestante = 0;
+  atualizarDisplayTimer();
+}
+
+function atualizarDisplayTimer() {
+  const min = String(Math.floor(tempoRestante / 60)).padStart(2, '0');
+  const seg = String(tempoRestante % 60).padStart(2, '0');
+  const display = document.getElementById('timerDisplay');
+  if (display) display.innerText = `${min}:${seg}`;
 }
 
 async function carregarProgresso() {
