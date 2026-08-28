@@ -189,3 +189,49 @@
   cursor: pointer;
 }
 .admin-remove:hover { color: var(--red); }
+
+/* ---------- PASSO 3: BUSCA DE ALUNOS & TOAST ---------- */
+
+.admin-search-box {
+  margin-bottom: 12px;
+}
+
+.admin-search-box input {
+  width: 100%;
+  background: var(--black-3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--white);
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.admin-search-box input:focus {
+  outline: none;
+  border-color: var(--red);
+}
+
+.toast-notification {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 100;
+  background: var(--black-2);
+  color: var(--white);
+  border-left: 4px solid var(--red);
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transform: translateX(120%);
+  transition: transform 0.3s ease;
+}
+
+.toast-notification.is-visible {
+  transform: translateX(0);
+}
+
+.toast-notification.erro {
+  border-left-color: #ff4d4d;
+}
