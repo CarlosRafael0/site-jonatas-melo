@@ -3,16 +3,16 @@
    Paleta baseada na logo: preto / vermelho / branco
    ============================================ */
 :root {
-  --black:       #0A0A0B;
-  --black-2:     #131315;
-  --black-3:     #1C1C1F;
-  --red:         #E5231B;
-  --red-dark:    #8F150F;
-  --white:       #F5F4F0;
-  --gray:        #9A9A9E;
+  --black:        #0A0A0B;
+  --black-2:      #131315;
+  --black-3:      #1C1C1F;
+  --red:          #E5231B;
+  --red-dark:     #8F150F;
+  --white:        #F5F4F0;
+  --gray:         #9A9A9E;
 
   --font-display: 'Anton', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-body:    'Inter', sans-serif;
 
   --container: 1120px;
   --space-section: clamp(64px, 10vw, 140px);
@@ -490,4 +490,34 @@ ul { list-style: none; }
 a:focus-visible, button:focus-visible {
   outline: 2px solid var(--red);
   outline-offset: 3px;
+}
+
+/* ============================================
+   PAINEL DE ADMIN — Alinhamento à esquerda
+   ============================================ */
+.admin-container,
+.painel-container,
+.dashboard-container,
+main.admin,
+main.dashboard {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 100px 3vw 40px 3vw !important; /* Respiro superior para não cobrir o menu fixed */
+}
+
+.admin-grid,
+.painel-grid,
+.dashboard-grid {
+  display: grid !important;
+  grid-template-columns: 260px 1fr !important;
+  gap: 32px !important;
+  align-items: start !important;
+}
+
+.admin-content,
+.painel-content,
+.dashboard-content {
+  width: 100% !important;
+  max-width: 100% !important;
 }
