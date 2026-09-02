@@ -1,6 +1,7 @@
 // Lógica do painel do Jônatas (admin) — gerenciar treinos e ver progresso dos alunos
 let adminAtual = null;
 let alunoSelecionadoId = null;
+let alunoSelecionadoSexo = 'M';
 let bibliotecaExercicios = [];
 
 const DIAS = [
@@ -36,10 +37,12 @@ async function cadastrarNovoAluno(e) {
   const nomeInput = document.getElementById('novoAlunoNome');
   const emailInput = document.getElementById('novoAlunoEmail');
   const senhaInput = document.getElementById('novoAlunoSenha');
+  const sexoSelect = document.getElementById('novoAlunoSexo');
 
   const nome = nomeInput.value.trim();
   const email = emailInput.value.trim();
   const password = senhaInput.value;
+  const sexo = sexoSelect ? sexoSelect.value : 'M';
 
   mostrarToast('Cadastrando aluno...');
 
@@ -58,12 +61,13 @@ async function cadastrarNovoAluno(e) {
   }
 
   if (authData.user) {
-    // 2. Inserir registro na tabela profiles
+    // 2. Inserir registro na tabela profiles com o campo sexo
     const { error: profileError } = await supabaseClient
       .from('profiles')
       .insert({
         id: authData.user.id,
         nome: nome,
+        sexo: sexo,
         is_admin: false
       });
 
@@ -98,7 +102,7 @@ async function carregarBiblioteca() {
 }
 
 /**
- * Preenche o campo de vídeo automaticamente caso o exercício exista na biblioteca
+ * Preenche o campo de vídeo automaticamente com base no gênero do aluno selecionado
  */
 function preencherVideoDaBiblioteca(nomeDigitado) {
   const exercicioEncontrado = bibliotecaExercicios.find(
@@ -106,8 +110,12 @@ function preencherVideoDaBiblioteca(nomeDigitado) {
   );
 
   const inputVideo = document.getElementById('exVideo');
-  if (exercicioEncontrado && exercicioEncontrado.video_url && inputVideo) {
-    inputVideo.value = exercicioEncontrado.video_url;
+  if (exercicioEncontrado && inputVideo) {
+    const videoUrl = alunoSelecionadoSexo === 'F' 
+      ? (exercicioEncontrado.video_url_f || exercicioEncontrado.video_url)
+      : (exercicioEncontrado.video_url_m || exercicioEncontrado.video_url);
+
+    inputVideo.value = videoUrl || '';
   }
 }
 
@@ -146,7 +154,7 @@ function filtrarAlunos(termo) {
 async function carregarAlunos() {
   const { data, error } = await supabaseClient
     .from('profiles')
-    .select('id, nome')
+    .select('id, nome, sexo')
     .eq('is_admin', false)
     .order('nome', { ascending: true });
 
@@ -158,11 +166,11 @@ async function carregarAlunos() {
   }
 
   lista.innerHTML = data.map(aluno => `
-    <button class="admin-student-item" data-id="${aluno.id}">${aluno.nome}</button>
+    <button class="admin-student-item" data-id="${aluno.id}" data-sexo="${aluno.sexo || 'M'}">${aluno.nome}</button>
   `).join('');
 
   lista.querySelectorAll('.admin-student-item').forEach(btn => {
-    btn.addEventListener('click', () => selecionarAluno(btn.dataset.id, btn.textContent));
+    btn.addEventListener('click', () => selecionarAluno(btn.dataset.id, btn.textContent, btn.dataset.sexo));
   });
 
   const buscaInput = document.getElementById('buscaAluno');
@@ -171,8 +179,9 @@ async function carregarAlunos() {
   }
 }
 
-async function selecionarAluno(alunoId, nome) {
+async function selecionarAluno(alunoId, nome, sexo = 'M') {
   alunoSelecionadoId = alunoId;
+  alunoSelecionadoSexo = sexo;
 
   document.querySelectorAll('.admin-student-item').forEach(b => b.classList.remove('is-active'));
   const btnAtivo = document.querySelector(`.admin-student-item[data-id="${alunoId}"]`);
@@ -238,11 +247,16 @@ async function carregarExerciciosDoAluno() {
       ${porDia[d.key].map(ex => {
         let embedUrl = ex.video_url;
         if (embedUrl) {
+          let videoId = '';
           if (embedUrl.includes('shorts/')) {
-            const videoId = embedUrl.split('shorts/')[1].split('?')[0];
-            embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0&controls=1&mute=1`;
+            videoId = embedUrl.split('shorts/')[1].split('?')[0];
           } else if (embedUrl.includes('watch?v=')) {
-            const videoId = embedUrl.split('watch?v=')[1].split('&')[0];
+            videoId = embedUrl.split('watch?v=')[1].split('&')[0];
+          } else if (embedUrl.includes('youtu.be/')) {
+            videoId = embedUrl.split('youtu.be/')[1].split('?')[0];
+          }
+
+          if (videoId) {
             embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0&controls=1&mute=1`;
           }
         }
@@ -291,10 +305,18 @@ async function adicionarExercicio(e) {
     );
 
     if (!jaExisteNaBiblioteca && videoUrl) {
-      await supabaseClient.from('exercicios_base').insert({
+      const novoExercicioData = {
         nome: nomeExercicio,
         video_url: videoUrl
-      });
+      };
+
+      if (alunoSelecionadoSexo === 'F') {
+        novoExercicioData.video_url_f = videoUrl;
+      } else {
+        novoExercicioData.video_url_m = videoUrl;
+      }
+
+      await supabaseClient.from('exercicios_base').insert(novoExercicioData);
       await carregarBiblioteca();
     }
 

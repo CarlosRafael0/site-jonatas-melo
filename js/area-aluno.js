@@ -32,14 +32,27 @@ async function init() {
 }
 
 /**
- * Converte links do YouTube / YouTube Shorts em URL de Embed para iframe
+ * Converte links do YouTube / YouTube Shorts / youtu.be em URL de Embed otimizada para iframe
  */
 function obterUrlEmbed(url) {
   if (!url) return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
-  const match = url.match(regExp);
-  return (match && match[2].length === 11) 
-    ? `https://www.youtube.com/embed/${match[2]}` 
+  let videoId = '';
+
+  if (url.includes('shorts/')) {
+    videoId = url.split('shorts/')[1].split('?')[0];
+  } else if (url.includes('watch?v=')) {
+    videoId = url.split('watch?v=')[1].split('&')[0];
+  } else if (url.includes('youtu.be/')) {
+    videoId = url.split('youtu.be/')[1].split('?')[0];
+  } else {
+    const match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/);
+    if (match && match[2].length === 11) {
+      videoId = match[2];
+    }
+  }
+
+  return videoId 
+    ? `https://www.youtube.com/embed/${videoId}?autoplay=0&controls=1&mute=1` 
     : url;
 }
 
@@ -172,7 +185,7 @@ async function carregarProgresso() {
   const comPeso = data.filter(r => r.peso_kg != null);
   const ctx = document.getElementById('progressoChart');
   if (chart) chart.destroy();
-  if (comPeso.length > 0) {
+  if (comPeso.length > 0 && ctx) {
     chart = new Chart(ctx, {
       type: 'line',
       data: {
