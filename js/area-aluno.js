@@ -74,7 +74,7 @@ function obterUrlEmbed(url) {
   }
 
   return videoId 
-    ? `https://www.youtube.com/embed/${videoId}?autoplay=0&controls=1&mute=1` 
+    ? `https://www.youtube.com/embed/${videoId}?rel=0&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}` 
     : null;
 }
 
@@ -140,7 +140,8 @@ function mostrarDia(dia) {
                 src="${urlEmbed}" 
                 title="${ex.exercicio}"
                 frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin"
                 allowfullscreen>
               </iframe>
             </div>
