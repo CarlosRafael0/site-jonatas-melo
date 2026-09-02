@@ -34,6 +34,9 @@ if (loginForm) {
       return;
     }
 
+    // Guarda a flag no localStorage para decisões instantâneas no carregamento
+    localStorage.setItem('is_admin', perfil.is_admin ? 'true' : 'false');
+
     window.location.href = perfil.is_admin ? 'admin.html' : 'area-aluno.html';
   });
 }
@@ -41,9 +44,18 @@ if (loginForm) {
 // Função usada nas páginas protegidas (area-aluno.html e admin.html)
 // pra garantir que só quem está logado (e com o perfil certo) acesse.
 async function exigirLogin({ precisaSerAdmin = false } = {}) {
+  // Check síncrono instantâneo via localStorage antes da chamada assíncrona
+  const cachedIsAdmin = localStorage.getItem('is_admin');
+  
+  if (precisaSerAdmin && cachedIsAdmin === 'false') {
+    window.location.href = 'area-aluno.html';
+    return null;
+  }
+
   const { data: { session } } = await supabaseClient.auth.getSession();
 
   if (!session) {
+    localStorage.removeItem('is_admin');
     window.location.href = 'login.html';
     return null;
   }
@@ -55,9 +67,13 @@ async function exigirLogin({ precisaSerAdmin = false } = {}) {
     .single();
 
   if (error || !perfil) {
+    localStorage.removeItem('is_admin');
     window.location.href = 'login.html';
     return null;
   }
+
+  // Atualiza o cache do perfil
+  localStorage.setItem('is_admin', perfil.is_admin ? 'true' : 'false');
 
   if (precisaSerAdmin && !perfil.is_admin) {
     window.location.href = 'area-aluno.html';
@@ -68,6 +84,7 @@ async function exigirLogin({ precisaSerAdmin = false } = {}) {
 }
 
 async function sair() {
+  localStorage.removeItem('is_admin');
   await supabaseClient.auth.signOut();
   window.location.href = 'login.html';
 }

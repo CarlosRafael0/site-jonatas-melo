@@ -4,6 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Painel | Jônatas Melo</title>
+
+<!-- Redirecionamento instantâneo no HEAD antes do carregamento do DOM -->
+<script>
+  (function() {
+    const isAdmin = localStorage.getItem('is_admin');
+    if (isAdmin === 'false') {
+      window.location.href = 'area-aluno.html';
+    }
+  })();
+</script>
+
+<style>
+  /* Esconde o corpo da página até confirmar que o usuário é admin */
+  body.admin-loading {
+    display: none !important;
+  }
+</style>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,7 +29,7 @@
 <link rel="stylesheet" href="css/treino.css">
 <link rel="stylesheet" href="css/app.css">
 </head>
-<body class="treino-page">
+<body class="treino-page admin-loading">
 
 <header class="app-header">
   <span class="app-header__title">Painel — <span class="text-red">Jônatas</span></span>
@@ -68,5 +86,14 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/admin.js"></script>
+<script>
+  // Exibe a página se for admin aprovado pelo exigirLogin()
+  document.addEventListener('DOMContentLoaded', async () => {
+    const perfil = await exigirLogin({ precisaSerAdmin: true });
+    if (perfil) {
+      document.body.classList.remove('admin-loading');
+    }
+  });
+</script>
 </body>
 </html>
