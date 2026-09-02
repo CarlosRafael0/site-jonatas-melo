@@ -1,6 +1,7 @@
 // Lógica do painel do Jônatas (admin) — gerenciar treinos e ver progresso dos alunos
 let adminAtual = null;
 let alunoSelecionadoId = null;
+let bibliotecaExercicios = [];
 
 const DIAS = [
   { key: 'seg', label: 'Segunda' },
@@ -16,7 +17,40 @@ async function init() {
   adminAtual = await exigirLogin({ precisaSerAdmin: true });
   if (!adminAtual) return;
 
+  await carregarBiblioteca();
   await carregarAlunos();
+}
+
+/**
+ * Carrega a biblioteca global de exercícios do Supabase
+ */
+async function carregarBiblioteca() {
+  const { data, error } = await supabaseClient
+    .from('exercicios_base')
+    .select('*')
+    .order('nome', { ascending: true });
+
+  if (!error && data) {
+    bibliotecaExercicios = data;
+    const datalist = document.getElementById('listaBiblioteca');
+    if (datalist) {
+      datalist.innerHTML = data.map(ex => `<option value="${ex.nome}">`).join('');
+    }
+  }
+}
+
+/**
+ * Preenche o campo de vídeo automaticamente caso o exercício exista na biblioteca
+ */
+function preencherVideoDaBiblioteca(nomeDigitado) {
+  const exercicioEncontrado = bibliotecaExercicios.find(
+    ex => ex.nome.toLowerCase() === nomeDigitado.toLowerCase()
+  );
+
+  const inputVideo = document.getElementById('exVideo');
+  if (exercicioEncontrado && exercicioEncontrado.video_url && inputVideo) {
+    inputVideo.value = exercicioEncontrado.video_url;
+  }
 }
 
 /**
@@ -95,9 +129,16 @@ async function selecionarAluno(alunoId, nome) {
       <select id="exDia" required>
         ${DIAS.map(d => `<option value="${d.key}">${d.label}</option>`).join('')}
       </select>
-      <input type="text" id="exNome" placeholder="Nome do exercício" required>
+      <input 
+        type="text" 
+        id="exNome" 
+        list="listaBiblioteca" 
+        placeholder="Nome do exercício" 
+        oninput="preencherVideoDaBiblioteca(this.value)" 
+        required
+      >
       <input type="text" id="exSeries" placeholder="Ex: 4x10" required>
-      <input type="url" id="exVideo" placeholder="Link do vídeo (opcional)">
+      <input type="url" id="exVideo" placeholder="Link do vídeo (automático)">
       <input type="text" id="exObs" placeholder="Observação (opcional)">
       <button type="submit">Adicionar exercício</button>
     </form>
@@ -154,16 +195,32 @@ async function carregarExerciciosDoAluno() {
 async function adicionarExercicio(e) {
   e.preventDefault();
 
+  const nomeExercicio = document.getElementById('exNome').value.trim();
+  const videoUrl = document.getElementById('exVideo').value.trim() || null;
+
   const { error } = await supabaseClient.from('treinos').insert({
     aluno_id: alunoSelecionadoId,
     dia_semana: document.getElementById('exDia').value,
-    exercicio: document.getElementById('exNome').value.trim(),
+    exercicio: nomeExercicio,
     series_reps: document.getElementById('exSeries').value.trim(),
-    video_url: document.getElementById('exVideo').value.trim() || null,
+    video_url: videoUrl,
     observacao: document.getElementById('exObs').value.trim() || null,
   });
 
   if (!error) {
+    // Se for um exercício novo com vídeo e não existir na biblioteca, cadastra automaticamente
+    const jaExisteNaBiblioteca = bibliotecaExercicios.some(
+      ex => ex.nome.toLowerCase() === nomeExercicio.toLowerCase()
+    );
+
+    if (!jaExisteNaBiblioteca && videoUrl) {
+      await supabaseClient.from('exercicios_base').insert({
+        nome: nomeExercicio,
+        video_url: videoUrl
+      });
+      await carregarBiblioteca();
+    }
+
     document.getElementById('novoExercicioForm').reset();
     mostrarToast('Exercício adicionado com sucesso!');
     await carregarExerciciosDoAluno();
