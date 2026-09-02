@@ -134,6 +134,25 @@ function mostrarDia(dia) {
 
           ${ex.observacao ? `<p class="exercise__note">${ex.observacao}</p>` : ''}
 
+          <!-- Campo Rápido de Cargas -->
+          <div class="exercise__carga-box" style="display: flex; align-items: center; gap: 8px; margin: 12px 0;">
+            <input 
+              type="number" 
+              step="0.5" 
+              id="carga-${ex.id}" 
+              placeholder="Carga (kg)" 
+              style="width: 100px; background: var(--black-3); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 6px 10px; border-radius: 4px; font-size: 13px;"
+            >
+            <button 
+              type="button" 
+              onclick="salvarCarga('${ex.id}', '${ex.exercicio}')"
+              style="background: var(--red); color: #fff; border: none; padding: 6px 12px; font-weight: 600; font-size: 12px; border-radius: 4px; cursor: pointer;"
+            >
+              Salvar
+            </button>
+            <span id="ultimaCarga-${ex.id}" style="font-size: 12px; color: #9A9A9E; margin-left: 4px;"></span>
+          </div>
+
           ${urlEmbed ? `
             <div class="video-container">
               <iframe 
@@ -150,6 +169,9 @@ function mostrarDia(dia) {
       `;
     }).join('')}
   `;
+
+  // Busca e carrega o histórico de carga mais recente para os exercícios renderizados
+  exercicios.forEach(ex => carregarUltimaCarga(ex.id, ex.exercicio));
 }
 
 /* ============================================
@@ -185,6 +207,46 @@ function atualizarDisplayTimer() {
   if (display) display.innerText = `${min}:${seg}`;
 }
 
+/* ============================================
+   HISTÓRICO E REGISTRO DE CARGAS POR EXERCÍCIO
+   ============================================ */
+async function salvarCarga(exercicioId, exercicioNome) {
+  const input = document.getElementById(`carga-${exercicioId}`);
+  const carga = input.value ? parseFloat(input.value) : null;
+
+  if (!carga || isNaN(carga)) return;
+
+  const { error } = await supabaseClient.from('historico_cargas').insert({
+    aluno_id: alunoAtual.id,
+    exercicio_nome: exercicioNome,
+    carga_kg: carga
+  });
+
+  if (!error) {
+    document.getElementById(`ultimaCarga-${exercicioId}`).textContent = `Última: ${carga} kg`;
+    input.value = '';
+  }
+}
+
+async function carregarUltimaCarga(exercicioId, exercicioNome) {
+  const { data } = await supabaseClient
+    .from('historico_cargas')
+    .select('carga_kg')
+    .eq('aluno_id', alunoAtual.id)
+    .eq('exercicio_nome', exercicioNome)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (data) {
+    const label = document.getElementById(`ultimaCarga-${exercicioId}`);
+    if (label) label.textContent = `Última: ${data.carga_kg} kg`;
+  }
+}
+
+/* ============================================
+   FUNÇÕES DE PROGRESSO DE PESO CORPORAL
+   ============================================ */
 async function carregarProgresso() {
   const { data, error } = await supabaseClient
     .from('progresso')
