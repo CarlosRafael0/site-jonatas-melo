@@ -107,7 +107,6 @@ async function carregarAlunos() {
     btn.addEventListener('click', () => selecionarAluno(btn.dataset.id, btn.textContent));
   });
 
-  // Aplica o filtro atual caso o usuário já tenha digitado algo na busca
   const buscaInput = document.getElementById('buscaAluno');
   if (buscaInput && buscaInput.value) {
     filtrarAlunos(buscaInput.value);
@@ -178,12 +177,33 @@ async function carregarExerciciosDoAluno() {
   lista.innerHTML = DIAS.filter(d => porDia[d.key]).map(d => `
     <div class="admin-day-group">
       <h4>${d.label}</h4>
-      ${porDia[d.key].map(ex => `
-        <div class="admin-exercise-row">
-          <span>${ex.exercicio} — ${ex.series_reps}</span>
-          <button class="admin-remove" data-id="${ex.id}">Remover</button>
-        </div>
-      `).join('')}
+      ${porDia[d.key].map(ex => {
+        let embedUrl = ex.video_url;
+        if (embedUrl) {
+          if (embedUrl.includes('shorts/')) {
+            const videoId = embedUrl.split('shorts/')[1].split('?')[0];
+            embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0&controls=1&mute=1`;
+          } else if (embedUrl.includes('watch?v=')) {
+            const videoId = embedUrl.split('watch?v=')[1].split('&')[0];
+            embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0&controls=1&mute=1`;
+          }
+        }
+
+        return `
+          <div class="admin-exercise-row">
+            ${embedUrl ? `
+              <div class="exercise-thumb-video">
+                <iframe src="${embedUrl}" allowfullscreen></iframe>
+              </div>
+            ` : ''}
+            <div class="exercise-info">
+              <span class="exercise-name">${ex.exercicio}</span>
+              <span class="exercise-meta">${ex.series_reps} ${ex.observacao ? `• ${ex.observacao}` : ''}</span>
+            </div>
+            <button class="admin-remove" data-id="${ex.id}">Remover</button>
+          </div>
+        `;
+      }).join('')}
     </div>
   `).join('');
 
@@ -208,7 +228,6 @@ async function adicionarExercicio(e) {
   });
 
   if (!error) {
-    // Se for um exercício novo com vídeo e não existir na biblioteca, cadastra automaticamente
     const jaExisteNaBiblioteca = bibliotecaExercicios.some(
       ex => ex.nome.toLowerCase() === nomeExercicio.toLowerCase()
     );
