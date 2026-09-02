@@ -23,10 +23,14 @@
   <!-- Lista de alunos -->
   <aside class="admin-sidebar">
     <h2 class="admin-sidebar__title">Alunos</h2>
-    <p class="admin-hint">
-      Pra cadastrar um aluno novo: Supabase → Authentication → Add user,
-      depois rode o INSERT em profiles (veja sql/schema.sql).
-    </p>
+
+    <!-- Formulário de Cadastro de Novo Aluno -->
+    <form id="formNovoAluno" style="margin-bottom: 24px; display: flex; flex-direction: column; gap: 8px;">
+      <input type="text" id="novoAlunoNome" placeholder="Nome do aluno" required style="background: var(--black-3); border: 1px solid rgba(255,255,255,0.12); color: var(--white); padding: 8px 10px; border-radius: 4px; font-size: 13px;">
+      <input type="email" id="novoAlunoEmail" placeholder="E-mail do aluno" required style="background: var(--black-3); border: 1px solid rgba(255,255,255,0.12); color: var(--white); padding: 8px 10px; border-radius: 4px; font-size: 13px;">
+      <input type="password" id="novoAlunoSenha" placeholder="Senha inicial" required style="background: var(--black-3); border: 1px solid rgba(255,255,255,0.12); color: var(--white); padding: 8px 10px; border-radius: 4px; font-size: 13px;">
+      <button type="submit" style="background: var(--red); color: var(--white); border: none; padding: 9px; font-weight: 700; font-size: 12px; border-radius: 4px; cursor: pointer;">+ Cadastrar Aluno</button>
+    </form>
 
     <!-- Campo de Busca de Alunos -->
     <div class="admin-search-box">
