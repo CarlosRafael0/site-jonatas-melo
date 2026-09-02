@@ -32,28 +32,50 @@ async function init() {
 }
 
 /**
- * Converte links do YouTube / YouTube Shorts / youtu.be em URL de Embed otimizada para iframe
+ * Converte qualquer link do YouTube em URL de Embed funcional para iframe
  */
 function obterUrlEmbed(url) {
-  if (!url) return null;
-  let videoId = '';
+  if (!url || typeof url !== 'string') return null;
 
-  if (url.includes('shorts/')) {
-    videoId = url.split('shorts/')[1].split('?')[0];
-  } else if (url.includes('watch?v=')) {
-    videoId = url.split('watch?v=')[1].split('&')[0];
-  } else if (url.includes('youtu.be/')) {
-    videoId = url.split('youtu.be/')[1].split('?')[0];
-  } else {
-    const match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/);
+  let urlLimpa = url.trim();
+  let videoId = null;
+
+  try {
+    // Normaliza para protocolo completo se necessário
+    if (!urlLimpa.startsWith('http://') && !urlLimpa.startsWith('https://')) {
+      urlLimpa = 'https://' + urlLimpa;
+    }
+
+    const parsedUrl = new URL(urlLimpa);
+
+    if (parsedUrl.hostname.includes('youtube.com')) {
+      if (parsedUrl.pathname.startsWith('/shorts/')) {
+        videoId = parsedUrl.pathname.split('/shorts/')[1].split('/')[0];
+      } else if (parsedUrl.pathname.startsWith('/embed/')) {
+        videoId = parsedUrl.pathname.split('/embed/')[1].split('/')[0];
+      } else {
+        videoId = parsedUrl.searchParams.get('v');
+      }
+    } else if (parsedUrl.hostname.includes('youtu.be')) {
+      videoId = parsedUrl.pathname.substring(1).split('/')[0];
+    }
+  } catch (e) {
+    // Fallback por Expressão Regular caso a URL esteja mal formatada
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+    const match = urlLimpa.match(regExp);
     if (match && match[2].length === 11) {
       videoId = match[2];
     }
   }
 
+  // Remove caracteres residuais caso venham na string
+  if (videoId) {
+    videoId = videoId.replace(/[^a-zA-Z0-9_-]/g, '');
+  }
+
   return videoId 
     ? `https://www.youtube.com/embed/${videoId}?autoplay=0&controls=1&mute=1` 
-    : url;
+    : null;
 }
 
 /**
