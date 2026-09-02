@@ -17,8 +17,66 @@ async function init() {
   adminAtual = await exigirLogin({ precisaSerAdmin: true });
   if (!adminAtual) return;
 
+  // Associa o formulário de novo aluno da sidebar
+  const formNovoAluno = document.getElementById('formNovoAluno');
+  if (formNovoAluno) {
+    formNovoAluno.addEventListener('submit', cadastrarNovoAluno);
+  }
+
   await carregarBiblioteca();
   await carregarAlunos();
+}
+
+/**
+ * Cadastra um novo aluno no Auth e insere na tabela profiles
+ */
+async function cadastrarNovoAluno(e) {
+  e.preventDefault();
+
+  const nomeInput = document.getElementById('novoAlunoNome');
+  const emailInput = document.getElementById('novoAlunoEmail');
+  const senhaInput = document.getElementById('novoAlunoSenha');
+
+  const nome = nomeInput.value.trim();
+  const email = emailInput.value.trim();
+  const password = senhaInput.value;
+
+  mostrarToast('Cadastrando aluno...');
+
+  // 1. Criar usuário no Supabase Auth
+  const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { nome }
+    }
+  });
+
+  if (authError) {
+    mostrarToast(authError.message, 'erro');
+    return;
+  }
+
+  if (authData.user) {
+    // 2. Inserir registro na tabela profiles
+    const { error: profileError } = await supabaseClient
+      .from('profiles')
+      .insert({
+        id: authData.user.id,
+        nome: nome,
+        is_admin: false
+      });
+
+    if (profileError) {
+      mostrarToast('Erro ao criar perfil: ' + profileError.message, 'erro');
+    } else {
+      mostrarToast('Aluno cadastrado com sucesso!');
+      nomeInput.value = '';
+      emailInput.value = '';
+      senhaInput.value = '';
+      await carregarAlunos();
+    }
+  }
 }
 
 /**
